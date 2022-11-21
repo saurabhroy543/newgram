@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  localhost:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+      - ./scripts/install-extensions.sql:/docker-entrypoint-initdb.d/install-extensions.sql
+
+    environment:
+      - POSTGRES_DB=newgram
+      - POSTGRES_USER=saurabh
+      - POSTGRES_PASSWORD=saurabh@
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    links:
+      - localhost
+    volumes:
+        - .:/code
+    ports:
+        - "8000:8000"
